@@ -29,12 +29,12 @@ public class GameRepo {
 		return mongoTemplate.findOne(searchQuery,Game.class);
 	}
 
-	public Game updateGameBoard(Game game) {
+	public void updateGameBoard(Game game) {
 		Query searchQuery = new Query(Criteria.where("id").is(game.getId()));
 		Update update = Update.update("gameBoard", game.getGameBoard());
 		FindAndModifyOptions options = new FindAndModifyOptions();
 		options.returnNew(false);
-		return mongoTemplate.findAndModify(searchQuery, update,options, Game.class);
+		mongoTemplate.findAndModify(searchQuery, update,options, Game.class);
 		
 		
 	}
@@ -43,7 +43,7 @@ public class GameRepo {
 		mongoTemplate.remove(game);
 	}
 	
-	public Game updateGame(Game game){
+	public void updateGame(Game game){
 		Query searchQuery = new Query(Criteria.where("id").is(game.getId()));
 		Update update = new Update();
 		update.set("gameMode", game.getGameMode());
@@ -52,7 +52,7 @@ public class GameRepo {
 		update.set("gameBoard", game.getGameBoard());
 		FindAndModifyOptions options = new FindAndModifyOptions();
 		options.returnNew(false);
-		return mongoTemplate.findAndModify(searchQuery, update,options, Game.class);
+		mongoTemplate.findAndModify(searchQuery, update,options, Game.class);
 	}
 
 }
