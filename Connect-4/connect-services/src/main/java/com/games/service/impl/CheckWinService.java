@@ -32,7 +32,7 @@ public class CheckWinService {
 		}
 		count = 0;
 		// diagonaly
-		for (int i = 0; i < maxRow - 4; i++) {
+		for (int i = 0; i < maxRow - 3; i++) {
 			count = 0;
 			int row, col;
 			for (row = i, col = 0; row < maxRow && col < maxCol; row++, col++) {
@@ -47,7 +47,7 @@ public class CheckWinService {
 		}
 		count = 0;
 		// diaginally
-		for (int j = 1; j < maxCol - 4; j++) {
+		for (int j = 1; j < maxCol - 3; j++) {
 			count = 0;
 			int row, col;
 			for (row = 0, col = j; row < maxRow && col < maxCol; row++, col++) {
@@ -61,11 +61,11 @@ public class CheckWinService {
 			}
 		}
 		count = 0;
-
-		for (int i = maxRow - 3; i < maxRow; i++) {
+		// diagonal
+		for (int i = maxRow - 1; i > (maxRow - 4); i--) {
 			count = 0;
 			int row, col;
-			for (row = i, col = 0; row > 0 && col < maxCol; row--, col++) {
+			for (row = i, col = 0; row >= 0 && col < maxCol; row--, col++) {
 				if (gridTable[row][col] == player) {
 					count++;
 					if (count >= 4)

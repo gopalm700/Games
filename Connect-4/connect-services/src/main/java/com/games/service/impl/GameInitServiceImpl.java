@@ -45,7 +45,8 @@ public class GameInitServiceImpl implements IGameInitService {
 			throw new ApplicationException(ApplicationErrorCode.GAME_DOESNOT_EXIST);
 		}
 		game.setGameBoard(new byte[6][7]);
-		return gameRepo.updateGameBoard(game);
+		gameRepo.updateGameBoard(game);
+		return this.getById(gameId);
 	}
 
 	public Game delete(String gameId) {
@@ -56,5 +57,10 @@ public class GameInitServiceImpl implements IGameInitService {
 			gameRepo.removeGameBoard(game);
 		}
 		return game;
+	}
+
+	public Game updateGame(Game game) {
+		gameRepo.updateGameBoard(game);
+		return this.getById(game.getId());
 	}
 }

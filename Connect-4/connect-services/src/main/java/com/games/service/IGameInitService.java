@@ -13,5 +13,7 @@ public interface IGameInitService {
 	public Game delete(String gameId);
 
 	public Game getById(String id);
+	
+	public Game updateGame (Game game);
 
 }

@@ -21,5 +21,4 @@
 		<property name="basename" value="classpath:errorMessages" />
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
-
 </beans>
