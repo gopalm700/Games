@@ -15,7 +15,6 @@ import com.games.entity.Game;
 @Repository
 public class GameRepo {
 
-	
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
@@ -26,7 +25,7 @@ public class GameRepo {
 
 	public Game getGameById(String gameId) {
 		Query searchQuery = new Query(Criteria.where("id").is(gameId));
-		return mongoTemplate.findOne(searchQuery,Game.class);
+		return mongoTemplate.findOne(searchQuery, Game.class);
 	}
 
 	public void updateGameBoard(Game game) {
@@ -34,25 +33,40 @@ public class GameRepo {
 		Update update = Update.update("gameBoard", game.getGameBoard());
 		FindAndModifyOptions options = new FindAndModifyOptions();
 		options.returnNew(false);
-		mongoTemplate.findAndModify(searchQuery, update,options, Game.class);
-		
-		
+		mongoTemplate.findAndModify(searchQuery, update, options, Game.class);
+
 	}
-	
+
 	public void removeGameBoard(Game game) {
 		mongoTemplate.remove(game);
 	}
-	
-	public void updateGame(Game game){
+
+	public void updateGame(Game game) {
 		Query searchQuery = new Query(Criteria.where("id").is(game.getId()));
 		Update update = new Update();
-		update.set("gameMode", game.getGameMode());
-		update.set("playerOneColor", game.getPlayerOneColor());
-		update.set("opponentColor", game.getOpponentColor());
-		update.set("gameBoard", game.getGameBoard());
+		if (game.getGameMode() != null) {
+			update.set("gameMode", game.getGameMode());
+		}
+		if (game.getPlayerOneColor() != null) {
+			update.set("playerOneColor", game.getPlayerOneColor());
+		}
+		if (game.getOpponentColor() != null) {
+			update.set("opponentColor", game.getOpponentColor());
+		}
+		if (game.getGameBoard() != null) {
+			update.set("gameBoard", game.getGameBoard());
+		}
 		FindAndModifyOptions options = new FindAndModifyOptions();
 		options.returnNew(false);
-		mongoTemplate.findAndModify(searchQuery, update,options, Game.class);
+		mongoTemplate.findAndModify(searchQuery, update, options, Game.class);
+	}
+
+	public MongoTemplate getMongoTemplate() {
+		return mongoTemplate;
+	}
+
+	public void setMongoTemplate(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
 	}
 
 }

@@ -3,7 +3,7 @@ package com.games.dto;
 import com.games.enums.GameState;
 import com.games.enums.Player;
 
-public class GameResponse extends GameCreateResponse {
+public class GameResponse extends BaseResponse {
 
 	private byte[][] gameBoard;
 

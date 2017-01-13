@@ -17,6 +17,7 @@ import com.games.dto.GameResponse;
 import com.games.enums.GameState;
 import com.games.exception.ApplicationErrorCode;
 import com.games.exception.ApplicationException;
+import com.games.service.IGameInitService;
 import com.games.service.IPlayGameService;
 import com.google.gson.Gson;
 
@@ -27,6 +28,9 @@ public class PlayController {
 
 	@Autowired
 	private IPlayGameService playGameService;
+
+	@Autowired
+	private IGameInitService gameService;
 
 	private Gson gson = new Gson();
 
@@ -41,8 +45,8 @@ public class PlayController {
 		GameResponse response = playGameService.playGame(gameResponse.getGameId(), gameResponse.getTurn(), column);
 		if (response.getState() != GameState.ENDED && response.getState() != GameState.DRAW) {
 			session.setAttribute(ApplicationConstant.GAME_ID, gson.toJson(response));
-		}
-		else{
+		} else {
+			gameService.delete(gameResponse.getGameId());
 			session.invalidate();
 		}
 		return new ResponseEntity<String>(gson.toJson(response), HttpStatus.OK);

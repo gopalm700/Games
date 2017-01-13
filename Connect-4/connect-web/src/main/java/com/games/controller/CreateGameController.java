@@ -1,5 +1,8 @@
 package com.games.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,15 +34,19 @@ public class CreateGameController {
 	Logger logger = LoggerFactory.getLogger(CreateGameController.class);
 
 	@RequestMapping(value = "/colors", method = RequestMethod.GET)
-	public ResponseEntity<ChipColor[]> chooseColor() {
-		return new ResponseEntity<ChipColor[]>(ChipColor.values(), HttpStatus.OK);
+	public ResponseEntity<Map<ChipColor, Byte>> chooseColor() {
+		Map<ChipColor, Byte> map = new HashMap<>();
+		for (ChipColor color : ChipColor.values()) {
+			map.put(color, color.getColorCode());
+		}
+		return new ResponseEntity<Map<ChipColor, Byte>>(map, HttpStatus.OK);
 	}
 
 	private Gson gson = new Gson();
 
 	@RequestMapping(value = "/playerOne/{playerOneColor}/start", method = RequestMethod.POST)
-	public ResponseEntity<? extends BaseResponse> createGame(@PathVariable(value = "playerOneColor") ChipColor playerOneColor,
-			HttpSession session) {
+	public ResponseEntity<? extends BaseResponse> createGame(
+			@PathVariable(value = "playerOneColor") ChipColor playerOneColor, HttpSession session) {
 		logger.info("Start the game");
 		Game game = null;
 		String str = (String) session.getAttribute(ApplicationConstant.GAME_ID);
@@ -50,15 +57,19 @@ public class CreateGameController {
 				game = gameInitService.getById(resp.getGameId());
 			}
 		}
+		ChipColor opponentColor = ((playerOneColor == ChipColor.BLUE) ? ChipColor.RED : ChipColor.BLUE);
 		if (game == null) {
-			ChipColor opponentColor = ((playerOneColor == ChipColor.BLUE) ? ChipColor.RED : ChipColor.BLUE);
 			game = gameInitService.createGame(playerOneColor, opponentColor, GameMode.SINGLE_PLAYER);
 			logger.info("Game created with game id {} ", game.getId());
 			resp = populateGameResponse(game);
 			session.setAttribute(ApplicationConstant.GAME_ID, gson.toJson(resp));
 			return new ResponseEntity<GameResponse>(resp, HttpStatus.OK);
 		} else {
-			return restartGame(session);
+			game.setPlayerOneColor(playerOneColor);
+			game.setGameBoard(new byte[6][7]);
+			game.setOpponentColor(opponentColor);
+			game = gameInitService.updateGame(game);
+			return new ResponseEntity<GameResponse>(populateGameResponse(game), HttpStatus.OK);
 		}
 
 	}
@@ -83,7 +94,7 @@ public class CreateGameController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-	public ResponseEntity<? extends  BaseResponse> deleteGame(HttpSession session) {
+	public ResponseEntity<? extends BaseResponse> deleteGame(HttpSession session) {
 		String str = (String) session.getAttribute(ApplicationConstant.GAME_ID);
 		GameResponse oldGameResponse = gson.fromJson(str, GameResponse.class);
 		if (null != oldGameResponse) {

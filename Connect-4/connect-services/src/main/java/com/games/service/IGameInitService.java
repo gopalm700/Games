@@ -14,6 +14,7 @@ public interface IGameInitService {
 
 	public Game getById(String id);
 	
-	public Game updateGame (Game game);
-
+	public Game updateGameBoard (Game game);
+	
+	public Game updateGame(Game game);
 }

@@ -50,7 +50,7 @@ public class PlayGameServiceImpl implements IPlayGameService {
 			}
 		}
 		game.setGameBoard(gameBoard);
-		game = gameInitService.updateGame(game);
+		game = gameInitService.updateGameBoard(game);
 		boolean flag = checkWinService.checkWin(game.getGameBoard(), move.getRow(), move.getColumn(), gameBoard.length,
 				gameBoard[0].length);
 		if (flag) {
@@ -63,7 +63,7 @@ public class PlayGameServiceImpl implements IPlayGameService {
 			GameResponse resp = robotPlayerService.play(gameBoard, game.getOpponentColor(), game.getPlayerOneColor(),
 					gameId);
 			game.setGameBoard(resp.getGameBoard());
-			gameInitService.updateGame(game);
+			gameInitService.updateGameBoard(game);
 			return resp;
 		}
 	}

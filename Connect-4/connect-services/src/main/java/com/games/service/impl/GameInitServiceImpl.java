@@ -59,8 +59,13 @@ public class GameInitServiceImpl implements IGameInitService {
 		return game;
 	}
 
-	public Game updateGame(Game game) {
+	public Game updateGameBoard(Game game) {
 		gameRepo.updateGameBoard(game);
+		return this.getById(game.getId());
+	}
+
+	public Game updateGame(Game game) {
+		gameRepo.updateGame(game);
 		return this.getById(game.getId());
 	}
 }
